@@ -14,4 +14,10 @@ public interface CompositeBatchBeanDao
 
 	Set<String> getAllValuesOfBeanTypes();
 
+	void update(CompositeBatchBeanEntity processor);
+
+	void delete(Long compositeBatchBeanId);
+
+	CompositeBatchBeanEntity get(Long compositeBatchBeanId);
+
 }

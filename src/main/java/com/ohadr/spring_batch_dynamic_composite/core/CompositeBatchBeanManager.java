@@ -12,6 +12,8 @@ public interface CompositeBatchBeanManager
 
 	Set<String> getAllValuesOfBeanTypes();
 
+	void deleteBatchBean(Long compositeBatchBeanId);
+
 	CompositeBatchBeanEntity getBatchBean(Long compositeBatchBeanId);
 
 	void addBatchBean(CompositeBatchBeanEntity processor);
