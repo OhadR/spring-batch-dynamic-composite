@@ -67,7 +67,7 @@ public class DynamicCompositeItemWriter<T>
 	{
 		List<ItemWriter<? super T>> delegates = new ArrayList<ItemWriter<? super T>>();
 
-		BatchBeanTypeEnum batchBeanType = null;
+		BatchBeanTypeEnum batchBeanType = BatchBeanTypeEnum.WRITER;
 		List<CompositeBatchBeanEntity> processorsList = compositeBatchBeanManager.getBatchBeanList(taskName, batchBeanType);
 		if (processorsList.isEmpty() && !acceptEmptyFiltersList)
 		{

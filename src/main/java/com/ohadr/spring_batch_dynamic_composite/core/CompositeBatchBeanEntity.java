@@ -1,12 +1,13 @@
 package com.ohadr.spring_batch_dynamic_composite.core;
 
 import java.io.Serializable;
+import org.springframework.batch.core.Entity;
 
-public class CompositeBatchBeanEntity implements Comparable<CompositeBatchBeanEntity>, Serializable
+public class CompositeBatchBeanEntity 
+	extends Entity 
+	implements Comparable<CompositeBatchBeanEntity>, Serializable
 {
 	private static final long serialVersionUID = 6582817624632934459L;
-
-	private Long id;
 
 	private String name;
 
@@ -16,14 +17,15 @@ public class CompositeBatchBeanEntity implements Comparable<CompositeBatchBeanEn
 
 	private BatchBeanTypeEnum batchBeanType;
 
-	public Long getId()
-	{
-		return id;
-	}
 
-	public void setId(Long id)
+	public CompositeBatchBeanEntity(Long id, 
+			String name, Integer priority, String taskName, BatchBeanTypeEnum batchBeanType)
 	{
-		this.id = id;
+		super(id);
+		this.name = name;
+		this.priority = priority;
+		this.taskName = taskName;
+		this.batchBeanType = batchBeanType;
 	}
 
 	public String getName()

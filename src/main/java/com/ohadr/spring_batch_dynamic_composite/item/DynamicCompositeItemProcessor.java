@@ -53,7 +53,7 @@ public class DynamicCompositeItemProcessor<I, O>
 	{
 		List<ItemProcessor<I, O>> delegates = new ArrayList<ItemProcessor<I, O>>();
 
-		BatchBeanTypeEnum batchBeanType = null;
+		BatchBeanTypeEnum batchBeanType = BatchBeanTypeEnum.PROCESSOR;
 		List<CompositeBatchBeanEntity> processorsList = compositeBatchBeanManager.getBatchBeanList(taskName, batchBeanType);
 		if (processorsList.isEmpty() && !acceptEmptyFiltersList)
 		{
