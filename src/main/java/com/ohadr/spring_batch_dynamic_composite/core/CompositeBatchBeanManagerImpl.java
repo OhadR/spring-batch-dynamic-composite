@@ -7,19 +7,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 //import org.springframework.cache.annotation.Cacheable;
 import org.springframework.util.StringUtils;
 
 import com.ohadr.spring_batch_dynamic_composite.repository.CompositeBatchBeanDao;
 
-/**
- * Entity manager for CompositeProcessorExecutorConfigurationEntity.
- * 
- */
+
+@Component
 public class CompositeBatchBeanManagerImpl implements CompositeBatchBeanManager
 {
+	private static Logger log = Logger.getLogger(CompositeBatchBeanManagerImpl.class);
 	/**
 	 * UID for CompositeBatchBeanManager
 	 */
@@ -28,9 +28,6 @@ public class CompositeBatchBeanManagerImpl implements CompositeBatchBeanManager
 	@Autowired
 	private CompositeBatchBeanDao compositeBatchBeanDao;
 
-
-	public CompositeBatchBeanManagerImpl()
-	{}
 
 
 	@Override
@@ -47,7 +44,7 @@ public class CompositeBatchBeanManagerImpl implements CompositeBatchBeanManager
 			throw new IllegalArgumentException("batchBeanType is null.");
 		}
 
-		List<CompositeBatchBeanEntity> batchBeanEntities = compositeBatchBeanDao.getCompositeBatchBean(taskName, batchBeanType);
+		List<CompositeBatchBeanEntity> batchBeanEntities = compositeBatchBeanDao.getCompositeBatchBeans(taskName, batchBeanType);
 
 		if (batchBeanEntities == null)
 		{
@@ -55,6 +52,8 @@ public class CompositeBatchBeanManagerImpl implements CompositeBatchBeanManager
 		}
 
 		Collections.sort(batchBeanEntities);
+
+		log.debug(batchBeanEntities);
 
 		return batchBeanEntities;
 

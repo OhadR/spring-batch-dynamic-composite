@@ -8,7 +8,7 @@ import com.ohadr.spring_batch_dynamic_composite.core.CompositeBatchBeanEntity;
 public interface CompositeBatchBeanDao 
 {
 
-	List<CompositeBatchBeanEntity> getCompositeBatchBean(String taskName, BatchBeanTypeEnum batchBeanType);
+	List<CompositeBatchBeanEntity> getCompositeBatchBeans(String taskName, BatchBeanTypeEnum batchBeanType);
 
 	Set<String> getAllTaskNames();
 
