@@ -3,54 +3,19 @@ package com.ohadr.spring_batch_dynamic_composite.item;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.springframework.batch.core.ExitStatus;
-import org.springframework.batch.core.StepExecution;
-import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.support.CompositeItemProcessor;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.StringUtils;
 import com.ohadr.spring_batch_dynamic_composite.core.BatchBeanTypeEnum;
 import com.ohadr.spring_batch_dynamic_composite.core.CompositeBatchBeanEntity;
-import com.ohadr.spring_batch_dynamic_composite.core.CompositeBatchBeanManager;
 
-public class DynamicCompositeItemProcessor<I, O> 
-	extends CompositeItemProcessor<I, O> 
-	implements StepExecutionListener, ApplicationContextAware
+public class DynamicCompositeItemProcessor<I, O> extends AbstractDynamicCompositeItem 
+	implements ItemProcessor<I, O>
 {
 	private static Logger log = Logger.getLogger(DynamicCompositeItemProcessor.class);
 
-	protected String taskName;
-
-	@Autowired
-	protected CompositeBatchBeanManager compositeBatchBeanManager;
-
-	// if false, filter result is false if any filter is defined
-	protected Boolean acceptEmptyFiltersList = false;
-
-	private ApplicationContext applicationContext;
-
-	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException
-	{
-		this.applicationContext = applicationContext;
-	}
-
-	//hide super's implementation
-	@Override
-	public void afterPropertiesSet() throws Exception 
-	{
-	}
-
-	@Override
-	public ExitStatus afterStep(StepExecution stepExecution)
-	{
-		return stepExecution != null ? stepExecution.getExitStatus() : null;
-	}
-
+	//aggregate CompositeItemProcessor<I, O> rather than extending it:
+	protected CompositeItemProcessor<I, O> delegate;
+	
 	protected void getProcessorsList()
 	{
 		List<ItemProcessor<I, O>> delegates = new ArrayList<ItemProcessor<I, O>>();
@@ -59,9 +24,9 @@ public class DynamicCompositeItemProcessor<I, O>
 		List<CompositeBatchBeanEntity> processorsList = compositeBatchBeanManager.getBatchBeanList(taskName, batchBeanType);
 		if (processorsList.isEmpty() && !acceptEmptyFiltersList)
 		{
-			log.error("No processors were found for taskName=" + taskName + " and batchBeanType=" + batchBeanType);
-
-			throw new RuntimeException("no processors were found");
+			String message = "No " + batchBeanType + " were found for taskName=" + taskName;
+			log.error(message);
+			throw new RuntimeException(message);
 		}
 
 		for (CompositeBatchBeanEntity compositeProcessorEntity : processorsList)
@@ -71,23 +36,19 @@ public class DynamicCompositeItemProcessor<I, O>
 			delegates.add( processor );
 		}
 
-		setDelegates(delegates);
+		delegate.setDelegates(delegates);
 		log.debug("processors list: " + delegates);		
 	}
 
 	@Override
-	public void beforeStep(StepExecution stepExecution)
+	protected void getItemsList()
 	{
-		taskName = stepExecution.getJobExecution().getJobInstance().getJobName();
-		
-		if (StringUtils.isEmpty(taskName))
-		{
-			String message = getClass().getSimpleName() + " beforeStep: taskName is null or empty.";
-	//		Log.error(message);
-			throw new RuntimeException(message);
-		}
-		
-		//get processors list from DB
-		getProcessorsList();
+		getProcessorsList();	
+	}
+
+	@Override
+	public O process(I item) throws Exception
+	{
+		return delegate.process(item);
 	}
 }
