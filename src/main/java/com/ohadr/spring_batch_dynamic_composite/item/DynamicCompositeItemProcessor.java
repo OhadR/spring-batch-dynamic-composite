@@ -2,6 +2,7 @@ package com.ohadr.spring_batch_dynamic_composite.item;
 
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.log4j.Logger;
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.StepExecution;
 import org.springframework.batch.core.StepExecutionListener;
@@ -20,6 +21,8 @@ public class DynamicCompositeItemProcessor<I, O>
 	extends CompositeItemProcessor<I, O> 
 	implements StepExecutionListener, ApplicationContextAware
 {
+	private static Logger log = Logger.getLogger(DynamicCompositeItemProcessor.class);
+
 	protected String taskName;
 
 	@Autowired
@@ -36,11 +39,10 @@ public class DynamicCompositeItemProcessor<I, O>
 		this.applicationContext = applicationContext;
 	}
 
+	//hide super's implementation
 	@Override
 	public void afterPropertiesSet() throws Exception 
 	{
-//		Assert.notNull(delegates, "The 'delegates' may not be null");
-//		Assert.notEmpty(delegates, "The 'delegates' may not be empty");
 	}
 
 	@Override
@@ -49,7 +51,7 @@ public class DynamicCompositeItemProcessor<I, O>
 		return stepExecution != null ? stepExecution.getExitStatus() : null;
 	}
 
-	protected void getProcessorsList() throws Exception
+	protected void getProcessorsList()
 	{
 		List<ItemProcessor<I, O>> delegates = new ArrayList<ItemProcessor<I, O>>();
 
@@ -57,9 +59,9 @@ public class DynamicCompositeItemProcessor<I, O>
 		List<CompositeBatchBeanEntity> processorsList = compositeBatchBeanManager.getBatchBeanList(taskName, batchBeanType);
 		if (processorsList.isEmpty() && !acceptEmptyFiltersList)
 		{
-//TODO			Log.debug("No filters found for Item . Item will not be accepted . filterName: " + this.getClass().getSimpleName() + " , item:" + item.getItemKey());
+			log.error("No processors were found for taskName=" + taskName + " and batchBeanType=" + batchBeanType);
 
-			throw new Exception();	//TODO better exception
+			throw new RuntimeException("no processors were found");
 		}
 
 		for (CompositeBatchBeanEntity compositeProcessorEntity : processorsList)
@@ -70,13 +72,14 @@ public class DynamicCompositeItemProcessor<I, O>
 		}
 
 		setDelegates(delegates);
-//TODO add relevant log		Log.trace("Item have been accepted. " + item);
-		
+		log.debug("processors list: " + delegates);		
 	}
 
 	@Override
 	public void beforeStep(StepExecution stepExecution)
 	{
+		taskName = stepExecution.getJobExecution().getJobInstance().getJobName();
+		
 		if (StringUtils.isEmpty(taskName))
 		{
 			String message = getClass().getSimpleName() + " beforeStep: taskName is null or empty.";
@@ -85,13 +88,6 @@ public class DynamicCompositeItemProcessor<I, O>
 		}
 		
 		//get processors list from DB
-		try
-		{
-			getProcessorsList();
-		}
-		catch (Exception e)
-		{
-			throw new RuntimeException("no processors were found");
-		}
+		getProcessorsList();
 	}
 }
