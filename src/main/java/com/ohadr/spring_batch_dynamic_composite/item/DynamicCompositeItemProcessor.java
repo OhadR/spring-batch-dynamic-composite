@@ -2,7 +2,6 @@ package com.ohadr.spring_batch_dynamic_composite.item;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.log4j.Logger;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.support.CompositeItemProcessor;
 import com.ohadr.spring_batch_dynamic_composite.core.BatchBeanTypeEnum;
