@@ -12,10 +12,8 @@ import com.ohadr.spring_batch_dynamic_composite.core.CompositeBatchBeanEntity;
 public class DynamicCompositeItemWriter<T> extends AbstractDynamicCompositeItem 
 	implements ItemWriter<T>
 {
-	private static Logger log = Logger.getLogger(DynamicCompositeItemWriter.class);
-
 	//aggregate CompositeItemWriter<T> rather than extending it:
-	protected CompositeItemWriter<T>	delegate;
+	protected CompositeItemWriter<T>	innerComposite = new CompositeItemWriter<>();
 
 	protected void getWritersList()
 	{
@@ -26,7 +24,6 @@ public class DynamicCompositeItemWriter<T> extends AbstractDynamicCompositeItem
 		if (processorsList.isEmpty() && !acceptEmptyFiltersList)
 		{
 			String message = "No " + batchBeanType + " were found for taskName=" + taskName;
-			log.error(message);
 			throw new RuntimeException(message);
 		}
 
@@ -37,9 +34,7 @@ public class DynamicCompositeItemWriter<T> extends AbstractDynamicCompositeItem
 			delegates.add( writer );
 		}
 
-		delegate.setDelegates(delegates);
-		log.debug("processors list: " + delegates);		
-		
+		innerComposite.setDelegates(delegates);
 	}
 
 	@Override
@@ -51,7 +46,7 @@ public class DynamicCompositeItemWriter<T> extends AbstractDynamicCompositeItem
 	@Override
 	public void write(List<? extends T> items) throws Exception
 	{
-		delegate.write(items);
+		innerComposite.write(items);
 	}
 
 }

@@ -53,10 +53,9 @@ public class CompositeBatchBeanManagerImpl implements CompositeBatchBeanManager
 
 		Collections.sort(batchBeanEntities);
 
-		log.debug(batchBeanEntities);
+		log.info("beans list:" + batchBeanEntities);
 
 		return batchBeanEntities;
-
 	}
 
 

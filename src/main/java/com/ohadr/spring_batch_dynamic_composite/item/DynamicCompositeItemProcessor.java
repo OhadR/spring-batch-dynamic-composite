@@ -11,10 +11,8 @@ import com.ohadr.spring_batch_dynamic_composite.core.CompositeBatchBeanEntity;
 public class DynamicCompositeItemProcessor<I, O> extends AbstractDynamicCompositeItem 
 	implements ItemProcessor<I, O>
 {
-	private static Logger log = Logger.getLogger(DynamicCompositeItemProcessor.class);
-
 	//aggregate CompositeItemProcessor<I, O> rather than extending it:
-	protected CompositeItemProcessor<I, O> delegate;
+	protected CompositeItemProcessor<I, O> innerComposite = new CompositeItemProcessor<I, O>();
 	
 	protected void getProcessorsList()
 	{
@@ -25,7 +23,6 @@ public class DynamicCompositeItemProcessor<I, O> extends AbstractDynamicComposit
 		if (processorsList.isEmpty() && !acceptEmptyFiltersList)
 		{
 			String message = "No " + batchBeanType + " were found for taskName=" + taskName;
-			log.error(message);
 			throw new RuntimeException(message);
 		}
 
@@ -36,8 +33,7 @@ public class DynamicCompositeItemProcessor<I, O> extends AbstractDynamicComposit
 			delegates.add( processor );
 		}
 
-		delegate.setDelegates(delegates);
-		log.debug("processors list: " + delegates);		
+		innerComposite.setDelegates(delegates);
 	}
 
 	@Override
@@ -49,6 +45,6 @@ public class DynamicCompositeItemProcessor<I, O> extends AbstractDynamicComposit
 	@Override
 	public O process(I item) throws Exception
 	{
-		return delegate.process(item);
+		return innerComposite.process(item);
 	}
 }
