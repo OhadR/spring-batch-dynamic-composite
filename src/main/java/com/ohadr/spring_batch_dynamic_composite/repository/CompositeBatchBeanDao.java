@@ -20,4 +20,6 @@ public interface CompositeBatchBeanDao
 
 	CompositeBatchBeanEntity get(Long compositeBatchBeanId);
 
+	void setTablePrefix(String tablePrefix);
+
 }

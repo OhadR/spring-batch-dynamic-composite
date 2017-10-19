@@ -36,6 +36,7 @@ public class JdbcCompositeBatchBeanDao implements CompositeBatchBeanDao
 
 	private JdbcOperations jdbcTemplate;
 
+
 	@Autowired
 	public void setDataSource(DataSource dataSource)
 	{
@@ -109,5 +110,16 @@ public class JdbcCompositeBatchBeanDao implements CompositeBatchBeanDao
 			compositeBatchBeanEntity.incrementVersion();
 			return compositeBatchBeanEntity;
 		}
+	}
+	
+	@Override
+	public void setTablePrefix(String tablePrefix)
+	{
+		this.tablePrefix = tablePrefix;
+	}
+
+	private String getTableName()
+	{
+		return tablePrefix + TABLE_NAME;
 	}
 }

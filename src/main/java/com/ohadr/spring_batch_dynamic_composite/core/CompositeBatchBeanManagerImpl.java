@@ -94,4 +94,10 @@ public class CompositeBatchBeanManagerImpl implements CompositeBatchBeanManager
 	{
 		return compositeBatchBeanDao.getAllValuesOfBeanTypes();
 	}
+	
+	public void setTablePrefix(String tablePrefix)
+	{
+		compositeBatchBeanDao.setTablePrefix(tablePrefix);
+	}
+
 }
