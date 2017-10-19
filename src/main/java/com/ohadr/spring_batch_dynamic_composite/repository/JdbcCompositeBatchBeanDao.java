@@ -21,16 +21,18 @@ public class JdbcCompositeBatchBeanDao implements CompositeBatchBeanDao
 {
 	private static Logger log = Logger.getLogger(JdbcCompositeBatchBeanDao.class);
 
-	private static final String TABLE_NAME = "ohad_" + "composite_batch_beans";
+	private static final String TABLE_NAME = "composite_batch_beans";
+	private static final String DEFAULT_TABLE_PREFIX = "";
+	private String tablePrefix = DEFAULT_TABLE_PREFIX;
 
 	private static final String COMPOSITE_BATCH_BEANS_FIELDS = "ID, "
 			+ "NAME, "
-			+ "TASK_NAME, "
+			+ "JOB_NAME, "
 			+ "BATCH_BEAN_TYPE, "
 			+ "PRIORITY";
 
-	private static final String DEFAULT_COMPOSITE_BATCH_BEANS_SELECT_STATEMENT = "select " + COMPOSITE_BATCH_BEANS_FIELDS
-			+ " from " + TABLE_NAME + " where TASK_NAME = ? and BATCH_BEAN_TYPE = ?";
+	private final String DEFAULT_COMPOSITE_BATCH_BEANS_SELECT_STATEMENT = "select " + COMPOSITE_BATCH_BEANS_FIELDS
+			+ " from " + getTableName() + " where JOB_NAME = ? and BATCH_BEAN_TYPE = ?";
 
 	private JdbcOperations jdbcTemplate;
 
