@@ -16,4 +16,5 @@ As mentioned, same for reader as well as for writer.
 There are cases that processors are used as "filters", and it may occur that the business (the client) may change the requirements (yes, it is very annoying) and ask to switch among filters (change the priority). 
 
 Other use case is having multiple readers, reading the data from different data warehouses, and again - the client changes the warehouse from time to time (integration phase), and I do not want my app to be restarted each and every time. 
+
 There are many other use cases, of course.
