@@ -18,3 +18,22 @@ There are cases that processors are used as "filters", and it may occur that the
 Other use case is having multiple readers, reading the data from different data warehouses, and again - the client changes the warehouse from time to time (integration phase), and I do not want my app to be restarted each and every time. 
 
 There are many other use cases, of course.
+
+## how to use it
+
+The recommended way to get started using this module in your project is with a dependency management system (such as Maven). As it is available in [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cspring-batch-dynamic-composite), the snippet below can be copied and pasted into your pom.xml:
+
+
+```xml
+		<dependency>
+			<groupId>com.ohadr</groupId>
+			<artifactId>spring-batch-dynamic-composite</artifactId>
+			<version>1.0</version>
+		</dependency>
+```
+
+## test application
+
+you can find a test-app here: https://github.com/OhadR/spring-batch-dynamic-composite-test
+
+It is a non-web spring-batch application, that uses this code as a maven-dependency, and uses the `DynamicCompositeItemProcessor` and writer. It configures a DB to show how to use the JAR, and in addition it configures another DB table to write the results it reads from a file. 
