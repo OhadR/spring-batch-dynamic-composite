@@ -21,7 +21,7 @@ There are many other use cases, of course.
 
 ## how to use it
 
-The recommended way to get started using this module in your project is with a dependency management system (such as Maven). As it is available in [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cspring-batch-dynamic-composite), the snippet below can be copied and pasted into your pom.xml:
+The recommended way to use this module in your project is with a dependency management system (such as Maven). As it is available in [Maven Central Repository](http://search.maven.org/#search%7Cga%7C1%7Cspring-batch-dynamic-composite), the snippet below can be copied and pasted into your pom.xml:
 
 
 ```xml
@@ -32,8 +32,24 @@ The recommended way to get started using this module in your project is with a d
 		</dependency>
 ```
 
+In addition, you can fork/clone, of course.
+
+## building the sources
+
+This is a maven-based application. You can easily use 
+
+`mvn clean install`.
+
 ## test application
 
 you can find a test-app here: https://github.com/OhadR/spring-batch-dynamic-composite-test
 
 It is a non-web spring-batch application, that uses this code as a maven-dependency, and uses the `DynamicCompositeItemProcessor` and writer. It configures a DB to show how to use the JAR, and in addition it configures another DB table to write the results it reads from a file. 
+
+## reporting an issue
+
+If there is an issue, [open an issue](https://github.com/OhadR/spring-batch-dynamic-composite/issues) here in GitHub.
+
+## contributing
+
+Contributions are welcome!
